@@ -16,8 +16,8 @@ const Total = ({parts}) => {
     </>
   )
 }
-const Part = ({name, exercise}) => (<>
-  <p>{name} {exercise}</p>
+const Part = ({name, exercises}) => (<>
+  <p>{name} {exercises}</p>
 </>)
 const Content = ({parts}) => (<>
   {
