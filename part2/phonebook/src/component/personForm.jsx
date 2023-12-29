@@ -1,11 +1,14 @@
+import { v4 as uuidv4 } from 'uuid'
+import { create, update } from "../util"
 
 export const PersonForm = ({
   newName,
   newNumber,
   setNewName,
   setNewNumber,
-  setPeople,
+  setReload,
   people,
+  setMsg
 }) => {
 
   const handleName = (event) => {
@@ -16,12 +19,33 @@ export const PersonForm = ({
     setNewNumber(event.target.value)
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    setPeople([...people, { name: newName, number: newNumber, id: people.length + 1 }])
-    alert(`${newName} is already added to phonebook`)
+    const name = newName
+    const number = newNumber
+    setMsg(name)
+    const addMsg = `${newName} is already added to phonebook`
+    const updateMsg = addMsg + ", replace the old number with a new one?"
     setNewName("...a new name")
     setNewNumber("...a new number")
+    const existe = people.find(el => el.name.toLowerCase() === name.toLowerCase())
+    if (existe) {
+      if(window.confirm(updateMsg)) {
+          await update(existe.id, { name, number })
+          setReload(true)
+      }
+      setTimeout(() => {
+        setMsg(false)
+      }, 1500)
+      return
+    }
+    await create({name, number, id: uuidv4()})
+    setMsg({text: name, style: "success"})
+    alert(addMsg)
+    setReload(true)
+    setTimeout(() => {
+      setMsg(false)
+    }, 1500)
   }
 
   return(
