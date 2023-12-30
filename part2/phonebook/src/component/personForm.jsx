@@ -31,7 +31,12 @@ export const PersonForm = ({
     const existe = people.find(el => el.name.toLowerCase() === name.toLowerCase())
     if (existe) {
       if(window.confirm(updateMsg)) {
+        try {
           await update(existe.id, { name, number })
+        } catch (error) {
+          console.log(error, "error un el update")          
+          setMsg({text: `Information of ${name} has already been removed from server`, style: "error"})
+        }
           setReload(true)
       }
       setTimeout(() => {
